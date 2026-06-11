@@ -28,7 +28,10 @@ Interested in adding outage resiliency to your IPAM, or universal network policy
 
 
 ## Introduction
-__DANM__ is Nokia's solution to bring TelCo grade network management into a Kubernetes cluster! DANM has more than 4 years of history inside the company, is currently deployed into production, and it is finally available for everyone, here on GitHub.
+
+__DANM__ was originally developed as Nokia's solution to bring TelCo grade network management into a Kubernetes cluster! DANM had more than 4 years of history inside the company and was deployed into production before it was open sourced.
+
+DANM was used in Nokia's own Telco grade Kubernetes offering for many years. Later Nokia decided to ramp down the Kubernetes platform business and the support for DAMN. In 2026 DANM  moved out from Nokia's stewardship to be maintained by the community.
 
 The name stands for "Damn, Another Network Manager!", because yes, we know: the last thing the K8s world needed is another TelCo company "revolutionizing" networking in Kubernetes.
 But still we hope that potential users checking out our project will involuntarily proclaim "DANM, that's some good networking stuff!" :)
