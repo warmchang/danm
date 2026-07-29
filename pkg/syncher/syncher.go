@@ -79,7 +79,7 @@ func (synch *Syncher) mergeErrorMessages() error {
 			aggregatedErrors = append(aggregatedErrors, "CNI operation for network:"+cniRes.CniName+" failed with:"+cniRes.OpResult.Error())
 		}
 	}
-	return fmt.Errorf(strings.Join(aggregatedErrors, "\n"))
+	return fmt.Errorf("%s", strings.Join(aggregatedErrors, "\n"))
 }
 
 func (synch *Syncher) MergeCniResults() *current.Result {

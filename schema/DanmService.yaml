@@ -53,7 +53,7 @@ spec:
   # No proxying will be involved.
   # Can be only present if "type" is set to "externalname"
   # OPTIONAL - STRING, BUT MUST BE A VALID RFC-1123 HOSTNAME (https://tools.ietf.org/html/rfc1123)
-  externalName: ## EXTERNAL_CNAME ## 
+  externalName: ## EXTERNAL_CNAME ##
   # Define the ports section of the Service as usual. Information in this section is used by DANM to populate the Endpoints
   # MANDATORY - LIST OF PORTS
   ports:

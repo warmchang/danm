@@ -68,5 +68,10 @@ func checkIp(args *skel.CmdArgs) error {
 }
 
 func main() {
-	skel.PluginMain(reserveIp, checkIp, freeIp, datastructs.SupportedCniVersions, "")
+	fakeIpamFuncs := skel.CNIFuncs{
+		Add:   reserveIp,
+		Check: checkIp,
+		Del:   freeIp,
+	}
+	skel.PluginMainFuncs(fakeIpamFuncs, datastructs.SupportedCniVersions, "")
 }

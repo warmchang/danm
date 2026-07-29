@@ -8,13 +8,13 @@ import (
 
 var (
 	SupportedNativeCnis = map[string]*datastructs.CniBackendConfig{
-		"sriov": &datastructs.CniBackendConfig{
+		"sriov": {
 			CNIVersion:   "0.3.1",
 			ReadConfig:   datastructs.CniConfigReader(getSriovCniConfig),
 			IpamNeeded:   true,
 			DeviceNeeded: true,
 		},
-		"macvlan": &datastructs.CniBackendConfig{
+		"macvlan": {
 			CNIVersion:   "0.3.1",
 			ReadConfig:   datastructs.CniConfigReader(getMacvlanCniConfig),
 			IpamNeeded:   true,
@@ -27,7 +27,7 @@ var (
 type SriovNet struct {
 	sriov_types.NetConf
 	// IPAM configuration to be used for this network
-	Ipam datastructs.IpamConfig `json:"ipam,omitEmpty"`
+	Ipam datastructs.IpamConfig `json:"ipam,omitempty"`
 }
 
 type MacvlanNet struct {
@@ -39,5 +39,5 @@ type MacvlanNet struct {
 	//MTU to be set to the MACVLAN slave interface (default 1500)
 	MTU int `json:"mtu"`
 	//IPAM configuration to be used for this network
-	Ipam datastructs.IpamConfig `json:"ipam,omitEmpty"`
+	Ipam datastructs.IpamConfig `json:"ipam,omitempty"`
 }

@@ -1,7 +1,6 @@
 package cnidel_test
 
 import (
-	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
@@ -33,95 +32,95 @@ type CniConf struct {
 }
 
 var testNets = []danmtypes.DanmNet{
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "empty"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "empty", NetworkType: ""},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "ipvlan"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "ipvlan", NetworkType: "ipvlan"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "IPVLAN-UPPER"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "IPVLAN-UPPER", NetworkType: "IPVLAN"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "sriov"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "sriov", NetworkType: "sriov"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "flannel"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "flannel", NetworkType: "flannel"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "hululululu"},
 		Spec:       danmtypes.DanmNetSpec{NetworkID: "hululululu", NetworkType: "hululululu"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "ipamNeeded"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "macvlan", NetworkID: "cidr"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "flannel-test"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "flannel", NetworkID: "flannel_conf"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "no-conf"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "flannel", NetworkID: "hulululu"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "no-binary"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "flanel", NetworkID: "flannel_conf"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "macvlan-v4"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "macvlan", NetworkID: "macvlan-v4", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26", Device: "ens1f0"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "macvlan-v6"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "macvlan", NetworkID: "macvlan-v6", Options: danmtypes.DanmNetOption{Net6: "2a00:8a00:a000:1193::/64", Device: "ens1f1"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "macvlan-ds"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "macvlan", NetworkID: "macvlan-ds", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26", Net6: "2a00:8a00:a000:1193::/64", Device: "ens1f1"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "sriov-test"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "sriov", NetworkID: "sriov-test", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26", Vlan: 500}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "full-macvlan"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "macvlan", NetworkID: "full", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26", Device: "ens1f0"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-ipam-ipv4"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l3", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-ipam-l2"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l2", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-invalid"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_invalid", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-noipam"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l3"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-noipam-l2"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l2"},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-ipam-ipv6"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l3", Options: danmtypes.DanmNetOption{Net6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "bridge-ipam-ds"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l3", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26", Net6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmNet{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "full-bridge"},
 		Spec:       danmtypes.DanmNetSpec{NetworkType: "bridge", NetworkID: "bridge_l2", Options: danmtypes.DanmNetOption{Cidr: "192.168.1.64/26"}},
 	},
@@ -157,54 +156,54 @@ var testCniConfFiles = []CniConf{
 }
 
 var testEps = []danmtypes.DanmEp{
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "dynamicIpv4"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "ens1f0", Address: "192.168.1.65/26"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "dynamicIpv6"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "ens1f1", AddressIPv6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "dynamicDual"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "ens1f1", Address: "192.168.1.65/26", AddressIPv6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "noIps"}, Spec: danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "dynamicIpv4WithDeviceId"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "192.168.1.65/26", DeviceID: "0000:af:06.0"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "noneWithDeviceId"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "none", DeviceID: "0000:af:06.0"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "deleteFlannel"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "10.244.10.30"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "withAddress"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "ens1f0", Address: "192.168.1.65/26"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "simpleIpv4"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "192.168.1.65/26"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "simpleIpv6"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", AddressIPv6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "simpleDs"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "192.168.1.65/26", AddressIPv6: "2a00:8a00:a000:1193::/64"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "withAddressSimple"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "192.168.1.65/26"}},
 	},
-	danmtypes.DanmEp{
+	{
 		ObjectMeta: meta_v1.ObjectMeta{Name: "withForeignAddressSimple"},
 		Spec:       danmtypes.DanmEpSpec{Iface: danmtypes.DanmEpIface{Name: "eth0", Address: "10.244.1.10/24"}},
 	},
@@ -280,6 +279,7 @@ var delDeleteTcs = []struct {
 }
 
 func TestIsDelegationRequired(t *testing.T) {
+	t.Skip("CNI DEL tests actually run on the SUT therefore require a specialized executor container")
 	for _, tc := range delegationRequiredTcs {
 		t.Run(tc.netName, func(t *testing.T) {
 			dnet := utils.GetTestNet(tc.netName, testNets)
@@ -292,6 +292,7 @@ func TestIsDelegationRequired(t *testing.T) {
 }
 
 func TestIsDeviceNeeded(t *testing.T) {
+	t.Skip("CNI DEL tests actually run on the SUT therefore require a specialized executor container")
 	for _, tc := range isDeviceNeededTcs {
 		isDevNeeded := cnidel.IsDeviceNeeded(tc.BackendName)
 		if isDevNeeded != tc.deviceNeeded {
@@ -301,6 +302,7 @@ func TestIsDeviceNeeded(t *testing.T) {
 }
 
 func TestGetEnv(t *testing.T) {
+	t.Skip("CNI DEL tests actually run on the SUT therefore require a specialized executor container")
 	testEnvKey := "HOTEL"
 	testEnvVal := "trivago"
 	os.Setenv(testEnvKey, testEnvVal)
@@ -316,6 +318,7 @@ func TestGetEnv(t *testing.T) {
 }
 
 func TestDelegateInterfaceSetup(t *testing.T) {
+	t.Skip("CNI DEL tests actually run on the SUT therefore require a specialized executor container")
 	err := setupDelTest("ADD")
 	if err != nil {
 		t.Errorf("Test suite could not be set-up because:%s", err.Error())
@@ -362,6 +365,7 @@ func TestDelegateInterfaceSetup(t *testing.T) {
 }
 
 func TestDelegateInterfaceDelete(t *testing.T) {
+	t.Skip("CNI DEL tests actually run on the SUT therefore require a specialized executor container")
 	err := setupDelTest("DEL")
 	if err != nil {
 		t.Errorf("Test suite could not be set-up because:%s", err.Error())
@@ -397,7 +401,7 @@ func TestDelegateInterfaceDelete(t *testing.T) {
 				var ipFile = filepath.Join(defaultDataDir, flannelBridge, testEp.Spec.Iface.Address)
 				_, err = os.Lstat(ipFile)
 				if err == nil {
-					t.Errorf("IP file:" + ipFile + " was not cleaned-up by Flannel IP exhaustion protection code!")
+					t.Errorf("%s", "IP file:"+ipFile+" was not cleaned-up by Flannel IP exhaustion protection code!")
 				}
 			}
 		})
@@ -429,17 +433,17 @@ func setupDelTest(opType string) error {
 	testPlugins := [4]string{"flannel", "macvlan", "sriov", "bridge"}
 	for _, plugin := range testPlugins {
 		os.RemoveAll(filepath.Join(cniTesterDir, plugin))
-		input, err := ioutil.ReadFile(filepath.Join(os.Getenv("GOPATH"), "bin", "cnitest"))
+		input, err := os.ReadFile(filepath.Join(os.Getenv("GOPATH"), "bin", "cnitest"))
 		if err != nil {
 			return err
 		}
-		err = ioutil.WriteFile(filepath.Join(cniTesterDir, plugin), input, 777)
+		err = os.WriteFile(filepath.Join(cniTesterDir, plugin), input, 0777)
 		if err != nil {
 			return err
 		}
 	}
 	for _, confFile := range testCniConfFiles {
-		err = ioutil.WriteFile(filepath.Join(cniTestConfigDir, confFile.ConfName), confFile.Conftent, 0666)
+		err = os.WriteFile(filepath.Join(cniTestConfigDir, confFile.ConfName), confFile.Conftent, 0666)
 		if err != nil {
 			return err
 		}
@@ -466,7 +470,7 @@ func setupDelTestTc(expectedCniConfig string) error {
 		}
 	}
 	os.Remove(filepath.Join(cniTestConfigDir, cniTestConfigFile))
-	err := ioutil.WriteFile(filepath.Join(cniTestConfigDir, cniTestConfigFile), expectedConf.Conftent, 0666)
+	err := os.WriteFile(filepath.Join(cniTestConfigDir, cniTestConfigFile), expectedConf.Conftent, 0666)
 	if err != nil {
 		return err
 	}

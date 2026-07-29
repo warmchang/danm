@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strconv"
@@ -121,7 +121,6 @@ func exhaustNetwork(dnet *danmtypes.DanmNet) {
 		}
 		dnet.Spec.Options.Alloc6 = v6Ba.Encode()
 	}
-	return
 }
 
 func GetTconf(tconfName string, tconfSet []danmtypes.TenantConfig) *danmtypes.TenantConfig {
@@ -150,10 +149,10 @@ func CreateHttpRequest(oldObj, newObj []byte, isOldMalformed, isNewMalformed boo
 	if oldObj != nil || newObj != nil {
 		rawReview, err := json.Marshal(review)
 		if err != nil {
-			errors.New("AdmissionReview couldn't be marshalled because:" + err.Error())
+			return nil, errors.New("AdmissionReview couldn't be marshalled because:" + err.Error())
 		}
 		reader := bytes.NewReader(rawReview)
-		httpRequest.Body = ioutil.NopCloser(reader)
+		httpRequest.Body = io.NopCloser(reader)
 	}
 	return &httpRequest, err
 }

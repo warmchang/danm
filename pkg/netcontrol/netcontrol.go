@@ -544,15 +544,16 @@ func ConvertDnetToCnet(dnet *danmtypes.DanmNet) *danmtypes.ClusterNetwork {
 func PutNetwork(danmClient danmclientset.Interface, dnet *danmtypes.DanmNet) (bool, error) {
 	var err error
 	var wasResourceAlreadyUpdated bool
-	if dnet.TypeMeta.Kind == DanmNetKind || dnet.TypeMeta.Kind == "" {
+	switch dnet.TypeMeta.Kind {
+	case DanmNetKind, "":
 		_, err = danmClient.DanmV1().DanmNets(dnet.ObjectMeta.Namespace).Update(context.TODO(), dnet, meta_v1.UpdateOptions{})
-	} else if dnet.TypeMeta.Kind == TenantNetworkKind {
+	case TenantNetworkKind:
 		tn := ConvertDnetToTnet(dnet)
 		_, err = danmClient.DanmV1().TenantNetworks(dnet.ObjectMeta.Namespace).Update(context.TODO(), tn, meta_v1.UpdateOptions{})
-	} else if dnet.TypeMeta.Kind == ClusterNetworkKind {
+	case ClusterNetworkKind:
 		cn := ConvertDnetToCnet(dnet)
 		_, err = danmClient.DanmV1().ClusterNetworks().Update(context.TODO(), cn, meta_v1.UpdateOptions{})
-	} else {
+	default:
 		return wasResourceAlreadyUpdated, errors.New("can't refresh network object because it has an invalid type:" + dnet.TypeMeta.Kind)
 	}
 	if err != nil {

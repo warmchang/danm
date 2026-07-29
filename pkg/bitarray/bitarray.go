@@ -23,7 +23,7 @@ type BitArray struct {
 // NewBitArray creates a new, empty BitArray object
 // Returns error if length is zero, otherwise a pointer to the array
 func NewBitArray(len uint32) (*BitArray, error) {
-	if 0 == len {
+	if len == 0 {
 		return nil, errors.New("Can't make a BitArray with zero length!")
 	}
 	bitArray := &BitArray{len, make([]byte, (len+7)/8)}

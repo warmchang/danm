@@ -3,7 +3,7 @@ package admit
 import (
 	"encoding/json"
 	"errors"
-	"io/ioutil"
+	"io"
 	"log"
 	"net/http"
 	"strings"
@@ -27,7 +27,7 @@ func DecodeAdmissionReview(httpRequest *http.Request) (v1beta1.AdmissionReview, 
 	if httpRequest.Body == nil {
 		return reviewRequest, errors.New("Received review request is empty!")
 	}
-	payload, err := ioutil.ReadAll(httpRequest.Body)
+	payload, err := io.ReadAll(httpRequest.Body)
 	if err != nil {
 		return reviewRequest, err
 	}

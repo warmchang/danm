@@ -221,17 +221,11 @@ func setDanmEpSysctls(ep *danmtypes.DanmEp) error {
 }
 
 func isIPv6Needed(ep *danmtypes.DanmEp) bool {
-	if ep.Spec.Iface.AddressIPv6 != "" {
-		return true
-	}
-	return false
+	return ep.Spec.Iface.AddressIPv6 != ""
 }
 
 func isIPv6NotNeeded(ep *danmtypes.DanmEp) bool {
-	if ep.Spec.Iface.AddressIPv6 == "" {
-		return true
-	}
-	return false
+	return ep.Spec.Iface.AddressIPv6 == ""
 }
 
 // ArePodsConnectedToNetwork checks if there are any Pods currently in the system using the particular network.

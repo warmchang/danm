@@ -7,7 +7,7 @@ spec:
   NetworkType: ipvlan
   Options:
     host_device: bond0
-    cidr: 10.0.0.0/24 
+    cidr: 10.0.0.0/24
     allocation_pool:
       start: 10.0.0.1
       end: 10.0.0.10

@@ -1,6 +1,6 @@
 kind: Namespace
 apiVersion: v1
-metadata: 
+metadata:
   name: example-vnf
   labels:
     name: example-vnf

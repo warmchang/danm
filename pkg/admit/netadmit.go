@@ -8,7 +8,6 @@ import (
 	"net/http"
 	"reflect"
 	"strings"
-	"time"
 
 	danmtypes "github.com/danm-cni/danm/crd/apis/danm/v1"
 	danmclientset "github.com/danm-cni/danm/crd/client/clientset/versioned"
@@ -179,7 +178,6 @@ func allocateDetailsForDynamicBackends(danmClient danmclientset.Interface, tnet 
 	if len(pfProfiles) == 0 {
 		return errors.New("There are no suitable interface profiles configured for TenantNetworks!")
 	}
-	rand.Seed(time.Now().UnixNano())
 	chosenProfile := pfProfiles[rand.Intn(len(pfProfiles))]
 	//Otherwise we randomly choose an interface profile and attach the TenantNetwork to it
 	return attachNetworkToIfaceProfile(danmClient, tnet, tconf, chosenProfile)

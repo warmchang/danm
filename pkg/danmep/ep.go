@@ -6,7 +6,6 @@ import (
 	"net"
 	"os"
 	"runtime"
-	"strconv"
 	"syscall"
 
 	"github.com/containernetworking/plugins/pkg/ns"
@@ -251,21 +250,6 @@ func deleteContainerIface(ep *danmtypes.DanmEp) error {
 	return nil
 }
 
-func determineIfName(dnet *danmtypes.DanmNet) string {
-	var device string
-	isVlanDefined := (dnet.Spec.Options.Vlan != 0)
-	isVxlanDefined := (dnet.Spec.Options.Vxlan != 0)
-	if isVxlanDefined {
-		device = "vx_" + dnet.Spec.NetworkID
-	} else if isVlanDefined {
-		vlanId := strconv.Itoa(dnet.Spec.Options.Vlan)
-		device = dnet.Spec.NetworkID + "." + vlanId
-	} else {
-		device = dnet.Spec.Options.Device
-	}
-	return device
-}
-
 func deleteEp(ep *danmtypes.DanmEp) error {
 	if ns.IsNSorErr(ep.Spec.Netns) != nil {
 		return errors.New("Cannot find netns")
@@ -309,6 +293,9 @@ func createDummyInterface(ep *danmtypes.DanmEp, dnet *danmtypes.DanmNet) error {
 		dummyEp := ep.DeepCopy()
 		dummyEp.Spec.Iface.Name = ep.ObjectMeta.Name[0:14]
 		err = setDanmEpSysctls(dummyEp)
+		if err != nil {
+			return errors.New("could not set kernel settings on dummy interface because:" + err.Error())
+		}
 		iface, err := netlink.LinkByName(origDummyName)
 		if err != nil {
 			return errors.New("cannot find freshly created dummy interface because:" + err.Error())

@@ -2,6 +2,7 @@ package admit
 
 import (
 	"errors"
+	"fmt"
 	"net"
 	"strconv"
 
@@ -35,9 +36,13 @@ type ValidatorMapping []ValidatorFunc
 func filterVnis(origSet cpuset.CPUSet) cpuset.CPUSet {
 	var newSet string
 	origIds := origSet.List()
-	for cpu := range origIds {
+	for _, cpu := range origIds {
 		if cpu > MaxAllowedVni {
-			newSet = newSet + "," + string(cpu)
+			if newSet == "" {
+				newSet = fmt.Sprint(cpu)
+			} else {
+				newSet = newSet + "," + fmt.Sprint(cpu)
+			}
 		}
 	}
 	finalVnis, _ := cpuset.Parse(newSet)

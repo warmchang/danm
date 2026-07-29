@@ -77,23 +77,20 @@ func PodReady(pod *corev1.Pod) bool {
 func SelectDesMatchLabels(des []*danmv1.DanmEp, selectorMap map[string]string, svcNets map[string]string, svcNs string) []*danmv1.DanmEp {
 	var deList []*danmv1.DanmEp
 	for _, de := range des {
-		deFit := true
 		if de.GetNamespace() != svcNs {
-			deFit = false
-		} else {
-			deMap := de.GetLabels()
-			deFit = IsContain(deMap, selectorMap)
-			if deFit && !isDepSelectedBySvc(de, svcNets) {
-				deFit = false
-			}
+			continue
 		}
-		if deFit {
-			deList = append(deList, de.DeepCopy())
+		deMap := de.GetLabels()
+		deFit := IsContain(deMap, selectorMap)
+		if deFit && !isDepSelectedBySvc(de, svcNets) {
+			continue
 		}
+		deList = append(deList, de.DeepCopy())
 	}
 	return deList
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func FindEpsForSvc(eps []*corev1.Endpoints, svcName, svcNs string) bool {
 	epFound := false
 	for _, ep := range eps {
@@ -157,7 +154,7 @@ func isDepSelectedBySvc(dep *danmv1.DanmEp, netSelectors map[string]string) bool
 		return false
 	}
 	if danmNet, ok := netSelectors[netcontrol.DanmNetKind]; ok {
-		if danmNet == dep.Spec.NetworkName && (netcontrol.DanmNetKind == dep.Spec.ApiType || "" == dep.Spec.ApiType) {
+		if danmNet == dep.Spec.NetworkName && (netcontrol.DanmNetKind == dep.Spec.ApiType || dep.Spec.ApiType == "") {
 			return true
 		}
 	}

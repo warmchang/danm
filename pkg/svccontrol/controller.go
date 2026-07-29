@@ -44,7 +44,7 @@ type Controller struct {
 	epsSynced     cache.InformerSynced
 	danmepLister  danmlisters.DanmEpLister
 	danmepSynced  cache.InformerSynced
-	workqueue     workqueue.RateLimitingInterface
+	workqueue     workqueue.TypedRateLimitingInterface[any]
 }
 
 func NewController(
@@ -69,7 +69,7 @@ func NewController(
 		epsSynced:     epsInformer.Informer().HasSynced,
 		danmepLister:  danmepInformer.Lister(),
 		danmepSynced:  danmepInformer.Informer().HasSynced,
-		workqueue:     workqueue.NewNamedRateLimitingQueue(workqueue.DefaultControllerRateLimiter(), "Endpoints"),
+		workqueue:     workqueue.NewTypedRateLimitingQueue(workqueue.DefaultTypedControllerRateLimiter[any]()),
 	}
 
 	glog.Info("Setting up event handlers")
@@ -170,6 +170,8 @@ func (c *Controller) syncHandler(key string) error {
 //	                    //
 //
 // ////////////////////////
+//
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) EpCheckUpdate(ipAddr, ip6Addr string, eps *corev1.Endpoints, pod *corev1.Pod, early bool) error {
 	wasIpv4AddressFound := isIpInEp(ipAddr, eps)
 	wasIpv6AddressFound := isIpInEp(ip6Addr, eps)
@@ -192,6 +194,7 @@ func (c *Controller) EpCheckUpdate(ipAddr, ip6Addr string, eps *corev1.Endpoints
 	return c.UpdateEndpoints(eps)
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) UpdateEndpoints(eps *corev1.Endpoints) error {
 	if eps.Subsets != nil &&
 		len(eps.Subsets[0].Addresses) == 0 &&
@@ -202,6 +205,7 @@ func (c *Controller) UpdateEndpoints(eps *corev1.Endpoints) error {
 	return err
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) UpdateEndpointsList(epList []*corev1.Endpoints) error {
 	var err error
 	for _, eps := range epList {
@@ -224,6 +228,7 @@ func (c *Controller) CreateModifyEndpoints(svc *corev1.Service, doesEpAlreadyExi
 	return err
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) UpdatePodRvInEps(epsList []*corev1.Endpoints, pod *corev1.Pod) []*corev1.Endpoints {
 	var epList []*corev1.Endpoints
 	for _, eps := range epsList {
@@ -252,6 +257,7 @@ func (c *Controller) UpdatePodRvInEps(epsList []*corev1.Endpoints, pod *corev1.P
 	return epList
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) UpdatePodStatusInEps(epsList []*corev1.Endpoints, pod *corev1.Pod, oldReady, newReady bool) []*corev1.Endpoints {
 	var epList []*corev1.Endpoints
 	for _, eps := range epsList {
@@ -304,6 +310,7 @@ func (c *Controller) UpdatePodStatusInEps(epsList []*corev1.Endpoints, pod *core
 	return epList
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) MakeNewEps(svc *corev1.Service, des []*danmv1.DanmEp) corev1.Endpoints {
 	epNew := corev1.Endpoints{
 		ObjectMeta: meta_v1.ObjectMeta{
@@ -346,6 +353,7 @@ func (c *Controller) MakeNewEps(svc *corev1.Service, des []*danmv1.DanmEp) corev
 		}
 		epPorts = append(epPorts, ep)
 	}
+	//nolint:staticcheck // EndpointSubset is deprecated but still supported, refactor it at some point though
 	subsets := []corev1.EndpointSubset{
 		{
 			Addresses:         readyEpAddrs,
@@ -431,6 +439,7 @@ func (c *Controller) updateDanmep(old, new interface{}) {
 	c.addDanmep(new)
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func (c *Controller) delDanmep(obj interface{}) {
 	glog.V(5).Infof("delDanmep is called: %s %s", obj.(*danmv1.DanmEp).GetName(), obj.(*danmv1.DanmEp).GetNamespace())
 	de := obj.(*danmv1.DanmEp)
@@ -636,6 +645,7 @@ func (c *Controller) updateSvc(old, new interface{}) {
 	c.addSvc(new)
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func isIpInEp(ip string, eps *corev1.Endpoints) bool {
 	var isIpPresent bool
 	for _, a := range eps.Subsets[0].Addresses {
@@ -647,6 +657,7 @@ func isIpInEp(ip string, eps *corev1.Endpoints) bool {
 	return isIpPresent
 }
 
+//nolint:staticcheck // Endpoints is deprecated but still supported, refactor it at some point though
 func createChangedEpAddressList(v4Address, v6Address string, pod *corev1.Pod, eps *corev1.Endpoints, targetRef *corev1.ObjectReference, epAddrs []corev1.EndpointAddress) []corev1.EndpointAddress {
 	if (v4Address != "" && v4Address != ipam.NoneAllocType && v4Address != ipam.DynamicAllocType) &&
 		(eps == nil || !isIpInEp(v4Address, eps)) {

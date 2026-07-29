@@ -559,7 +559,7 @@ func TestValidateNetwork(t *testing.T) {
 				timesUpdateWasCalled = testClient.DanmClient.TconfClient.TimesUpdateWasCalled
 			}
 			if tc.timesUpdateShouldBeCalled != timesUpdateWasCalled {
-				t.Errorf("TenantConfig should have been updated:" + strconv.Itoa(tc.timesUpdateShouldBeCalled) + " times, but it happened:" + strconv.Itoa(timesUpdateWasCalled) + " times instead")
+				t.Errorf("%s", "TenantConfig should have been updated:"+strconv.Itoa(tc.timesUpdateShouldBeCalled)+" times, but it happened:"+strconv.Itoa(timesUpdateWasCalled)+" times instead")
 			}
 		})
 	}

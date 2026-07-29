@@ -41,7 +41,7 @@ func TestNewBitArray(t *testing.T) {
 			testArray, newErr := bitarray.NewBitArray(tt.inputSize)
 			err := evalBa(tt.isErrorExpected, newErr, tt.expectedSize, testArray)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Errorf("%s", err.Error())
 			}
 		})
 	}
@@ -83,7 +83,7 @@ func TestCreateBitArrayFromIpnet(t *testing.T) {
 			ba, newErr := bitarray.CreateBitArrayFromIpnet(subnet)
 			err := evalBa(tc.isErrorExpected, newErr, tc.expectedSize, ba)
 			if err != nil {
-				t.Errorf(err.Error())
+				t.Errorf("%s", err.Error())
 			}
 		})
 	}

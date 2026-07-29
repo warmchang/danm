@@ -70,11 +70,12 @@ func testSetup(args *skel.CmdArgs) error {
 	if err != nil {
 		return errors.New("ENV variables were not set to expected value:" + err.Error())
 	}
-	if tcConf.CniExpectations.CniType == "sriov" {
+	switch tcConf.CniExpectations.CniType {
+	case "sriov":
 		err = validateSriovConfig(args.StdinData, expectedCniConf)
-	} else if tcConf.CniExpectations.CniType == "macvlan" {
+	case "macvlan":
 		err = validateMacvlanConfig(args.StdinData, expectedCniConf, tcConf)
-	} else if tcConf.CniExpectations.CniType == "flannel" {
+	case "flannel":
 		err = validateFlannelConfig(args.StdinData, expectedCniConf)
 	}
 	if err != nil {
@@ -197,9 +198,10 @@ func createType020CniResult(tcConf TestConfig) *types020.Result {
 func addIpToType20(ip string, version int, cniRes *types020.Result) {
 	_, ipNet, _ := net.ParseCIDR(ip)
 	ipConf := types020.IPConfig{IP: *ipNet}
-	if version == 4 {
+	switch version {
+	case 4:
 		cniRes.IP4 = &ipConf
-	} else if version == 6 {
+	case 6:
 		cniRes.IP6 = &ipConf
 	}
 }
@@ -218,9 +220,10 @@ func testDelete(args *skel.CmdArgs) error {
 	if err != nil {
 		return errors.New("DEL ENV variables were not set to expected value:" + err.Error())
 	}
-	if tcConf.CniExpectations.CniType == "macvlan" {
+	switch tcConf.CniExpectations.CniType {
+	case "macvlan":
 		err = validateMacvlanConfig(args.StdinData, expectedCniConf, tcConf)
-	} else if tcConf.CniExpectations.CniType == "flannel" {
+	case "flannel":
 		err = validateFlannelConfig(args.StdinData, expectedCniConf)
 	}
 	return err
@@ -237,5 +240,10 @@ func main() {
 		log.SetOutput(f)
 		defer f.Close()
 	}
-	skel.PluginMain(testSetup, testCheck, testDelete, datastructs.SupportedCniVersions, "")
+	cniTestFuncs := skel.CNIFuncs{
+		Add:   testSetup,
+		Check: testCheck,
+		Del:   testDelete,
+	}
+	skel.PluginMainFuncs(cniTestFuncs, datastructs.SupportedCniVersions, "")
 }

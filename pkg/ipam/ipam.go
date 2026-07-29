@@ -39,7 +39,7 @@ func Reserve(danmClient danmclientset.Interface, netInfo danmtypes.DanmNet, req4
 		if reflect.DeepEqual(origSpec, tempNet.Spec) {
 			return ip4, ip6, nil
 		}
-		retryNeeded, err, newNetSpec := updateIpAllocation(danmClient, tempNet)
+		retryNeeded, newNetSpec, err := updateIpAllocation(danmClient, tempNet)
 		if err != nil {
 			return "", "", err
 		}
@@ -72,7 +72,7 @@ func Free(danmClient danmclientset.Interface, netInfo danmtypes.DanmNet, rip str
 		if reflect.DeepEqual(origSpec, tempNet.Spec) {
 			return nil
 		}
-		retryNeeded, err, newNet := updateIpAllocation(danmClient, tempNet)
+		retryNeeded, newNet, err := updateIpAllocation(danmClient, tempNet)
 		if err != nil {
 			return err
 		}
@@ -230,19 +230,19 @@ func getIpFromIndex(index uint32, allocSubnet, netSubnet *net.IPNet) string {
 	return ip.String() + "/" + strconv.Itoa(prefix)
 }
 
-func updateIpAllocation(danmClient danmclientset.Interface, netInfo danmtypes.DanmNet) (bool, error, danmtypes.DanmNet) {
+func updateIpAllocation(danmClient danmclientset.Interface, netInfo danmtypes.DanmNet) (bool, danmtypes.DanmNet, error) {
 	resourceConflicted, err := netcontrol.PutNetwork(danmClient, &netInfo)
 	if err != nil {
-		return false, errors.New("DanmNet update failed with error:" + err.Error()), danmtypes.DanmNet{}
+		return false, danmtypes.DanmNet{}, errors.New("DanmNet update failed with error:" + err.Error())
 	}
 	if resourceConflicted {
 		newNetSpec, err := netcontrol.RefreshNetwork(danmClient, netInfo)
 		if err != nil {
-			return false, errors.New("After IP address reservation conflict, network cannot be read again!"), danmtypes.DanmNet{}
+			return false, danmtypes.DanmNet{}, errors.New("After IP address reservation conflict, network cannot be read again!")
 		}
-		return true, nil, *newNetSpec
+		return true, *newNetSpec, nil
 	}
-	return false, nil, danmtypes.DanmNet{}
+	return false, danmtypes.DanmNet{}, nil
 }
 
 func resetIp(alloc, cidr string, rip net.IP) string {

@@ -170,7 +170,7 @@ func TestDeleteNetwork(t *testing.T) {
 				timesUpdateWasCalled = testClient.DanmClient.TconfClient.TimesUpdateWasCalled
 			}
 			if tc.timesUpdateShouldBeCalled != timesUpdateWasCalled {
-				t.Errorf("TenantConfig should have been updated:" + strconv.Itoa(tc.timesUpdateShouldBeCalled) + " times, but it happened:" + strconv.Itoa(timesUpdateWasCalled) + " times instead")
+				t.Errorf("%s", "TenantConfig should have been updated:"+strconv.Itoa(tc.timesUpdateShouldBeCalled)+" times, but it happened:"+strconv.Itoa(timesUpdateWasCalled)+" times instead")
 			}
 		})
 	}
@@ -210,7 +210,7 @@ func resetTconf(tconf []danmtypes.TenantConfig) {
 	if tconf == nil {
 		return
 	}
-	for index, _ := range tconf[0].HostDevices {
+	for index := range tconf[0].HostDevices {
 		tconf[0].HostDevices[index].Alloc = utils.ExhaustedAllocFor5k
 	}
 }

@@ -154,7 +154,7 @@ spec:
                     net6:
                       maxLength: 0
                       format: cidr
-                      pattern: ':'    
+                      pattern: ':'
             type: object
         type: object
     served: true

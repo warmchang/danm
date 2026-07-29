@@ -192,9 +192,10 @@ func getMulticastIp(ipFamily int, vxlanId string) (net.IP, error) {
 		return nil, err
 	}
 	multicastCidr := ""
-	if ipFamily == netlink.FAMILY_V4 {
+	switch ipFamily {
+	case netlink.FAMILY_V4:
 		multicastCidr = ip4MulticastCidr
-	} else if ipFamily == netlink.FAMILY_V6 {
+	case netlink.FAMILY_V6:
 		multicastCidr = ip6MulticastCidr
 	}
 	_, mcastNet, err := net.ParseCIDR(multicastCidr)

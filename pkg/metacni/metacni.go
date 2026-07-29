@@ -45,7 +45,6 @@ const (
 )
 
 var (
-	apiHost    = os.Getenv("API_SERVERS")
 	DanmConfig *datastructs.NetConf
 )
 

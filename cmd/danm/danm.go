@@ -31,5 +31,10 @@ func main() {
 	defer f.Close()
 	log.SetOutput(f)
 	log.SetFlags(log.LstdFlags | log.Lmicroseconds)
-	skel.PluginMain(metacni.CreateInterfaces, metacni.GetInterfaces, metacni.DeleteInterfaces, datastructs.SupportedCniVersions, "")
+	danmFuncs := skel.CNIFuncs{
+		Add:   metacni.CreateInterfaces,
+		Check: metacni.GetInterfaces,
+		Del:   metacni.DeleteInterfaces,
+	}
+	skel.PluginMainFuncs(danmFuncs, datastructs.SupportedCniVersions, "")
 }

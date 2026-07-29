@@ -47,5 +47,3 @@ spec:
     allocation_pool:
       start: 10.200.20.10
       end: 10.200.20.30
-
-

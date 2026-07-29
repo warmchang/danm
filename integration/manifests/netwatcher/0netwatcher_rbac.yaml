@@ -13,7 +13,6 @@ metadata:
     kubernetes.io/bootstrapping: rbac-defaults
   name: system:netwatcher
 rules:
-rules:
 - apiGroups:
   - danm.io
   resources:
@@ -51,4 +50,3 @@ subjects:
 - kind: ServiceAccount
   namespace: kube-system
   name: netwatcher
-
